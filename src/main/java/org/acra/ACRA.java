@@ -366,7 +366,7 @@ public class ACRA {
         ACRA.log = log;
     }
 
-    public static void disableLog() {
+    public static void disableLogging() {
         ACRA.log = new HollowLog();
     }
 }
