@@ -539,4 +539,12 @@ public @interface ReportsCrashes {
     Method httpMethod() default Method.POST;
 
     Type reportType() default Type.FORM;
+
+    /**
+     * The directory path to store crash reports. Path is relative to {@link Context#getFilesDir()}
+     * Use to separate crash reports for multi process apps.
+     *
+     * @return Relative path to cash reports directory
+     */
+    String reportsDir() default "";
 }

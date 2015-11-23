@@ -88,6 +88,8 @@ public class ACRAConfiguration implements ReportsCrashes {
     private Map<String, String> mHttpHeaders;
     private KeyStore mKeyStore;
 
+    private String mReportsDir = null;
+
     /**
      * Set custom HTTP headers to be sent by the provided {@link HttpSender}.
      * This should be used also by third party senders.
@@ -666,6 +668,10 @@ public class ACRAConfiguration implements ReportsCrashes {
         mKeyStore = keyStore;
     }
 
+    public void setReportsDir(String reportsDir) {
+        mReportsDir = reportsDir;
+    }
+
     /**
      * @param defaults  Defaults with which to initialise this {@link ACRAConfiguration}.
      */
@@ -1242,6 +1248,18 @@ public class ACRAConfiguration implements ReportsCrashes {
         }
 
         return null;
+    }
+
+    public String reportsDir() {
+        if (mReportsDir != null) {
+            return mReportsDir;
+        }
+
+        if (mReportsCrashes != null) {
+            return mReportsCrashes.reportsDir();
+        }
+
+        return "";
     }
 
     public static boolean isNull(String aString) {

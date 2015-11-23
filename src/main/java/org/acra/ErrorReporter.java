@@ -40,6 +40,7 @@ import org.acra.sender.EmailIntentSender;
 import org.acra.sender.HttpSender;
 import org.acra.sender.ReportSender;
 import org.acra.util.PackageManagerWrapper;
+import org.acra.util.ReportUtils;
 import org.acra.util.ToastSender;
 
 import java.io.File;
@@ -973,8 +974,9 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         for (int iFile = 0; iFile < filesList.length - nbOfLatestToKeep; iFile++) {
             final String fileName = filesList[iFile];
             final boolean isReportApproved = fileNameParser.isApproved(fileName);
+            final File reportsDir = ReportUtils.getReportsDirectory(mContext, ACRA.getConfig().reportsDir());
             if ((isReportApproved && deleteApprovedReports) || (!isReportApproved && deleteNonApprovedReports)) {
-                final File fileToDelete = new File(mContext.getFilesDir(), fileName);
+                final File fileToDelete = new File(reportsDir, fileName);
                 ACRA.log.d(LOG_TAG, "Deleting file " + fileName);
                 if (!fileToDelete.delete()) {
                     ACRA.log.e(LOG_TAG, "Could not delete report : " + fileToDelete);

@@ -25,6 +25,7 @@ import java.util.List;
 import org.acra.collector.CrashReportData;
 import org.acra.sender.ReportSender;
 import org.acra.sender.ReportSenderException;
+import org.acra.util.ReportUtils;
 
 import android.content.Context;
 
@@ -85,10 +86,11 @@ final class SendWorker extends Thread {
 
         final CrashReportFinder reportFinder = new CrashReportFinder(context);
         final String[] reportFileNames = reportFinder.getCrashReportFiles();
+        final File reportsDir = ReportUtils.getReportsDirectory(context, ACRA.getConfig().reportsDir());
 
         for (String reportFileName : reportFileNames) {
             if (!fileNameParser.isApproved(reportFileName)) {
-                final File reportFile = new File(context.getFilesDir(), reportFileName);
+                final File reportFile = new File(reportsDir, reportFileName);
 
                 // TODO look into how this could cause a file to go from
                 // -approved.stacktrace to -approved-approved.stacktrace
@@ -97,7 +99,7 @@ final class SendWorker extends Thread {
 
                 // TODO Look into whether rename is atomic. Is there a better
                 // option?
-                final File newFile = new File(context.getFilesDir(), newName);
+                final File newFile = new File(reportsDir, newName);
                 if (!reportFile.renameTo(newFile)) {
                     ACRA.log.e(LOG_TAG, "Could not rename approved report from " + reportFile + " to " + newFile);
                 }
@@ -204,7 +206,8 @@ final class SendWorker extends Thread {
     }
 
     private void deleteFile(Context context, String fileName) {
-        final boolean deleted = context.deleteFile(fileName);
+        final File reportFile = new File(ReportUtils.getReportsDirectory(context, ACRA.getConfig().reportsDir()), fileName);
+        final boolean deleted = reportFile.delete();
         if (!deleted) {
             ACRA.log.w(LOG_TAG, "Could not delete error report : " + fileName);
         }
