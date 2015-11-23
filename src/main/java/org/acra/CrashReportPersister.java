@@ -23,10 +23,13 @@ import android.content.Context;
 
 import org.acra.collector.CollectorUtil;
 import org.acra.collector.CrashReportData;
+import org.acra.util.ReportUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -62,11 +65,8 @@ final class CrashReportPersister {
      */
     public CrashReportData load(String fileName) throws IOException {
 
-        final FileInputStream in = context.openFileInput(fileName);
-        if (in == null) {
-            throw new IllegalArgumentException("Invalid crash report fileName : " + fileName);
-        }
-
+        final File reportFile = new File(ReportUtils.getReportsDirectory(context, ACRA.getConfig().reportsDir()), fileName);
+        final FileInputStream in = new FileInputStream(reportFile);
         try {
             final BufferedInputStream bis = new BufferedInputStream(in, ACRAConstants.DEFAULT_BUFFER_SIZE_IN_BYTES);
             return load(new InputStreamReader(bis, "ISO8859-1")); //$NON-NLS-1$
@@ -86,7 +86,8 @@ final class CrashReportPersister {
      */
     public void store(CrashReportData crashData, String fileName) throws IOException {
 
-        final OutputStream out = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+        final File reportFile = new File(ReportUtils.getReportsDirectory(context, ACRA.getConfig().reportsDir()), fileName);
+        final OutputStream out = new FileOutputStream(reportFile);
         try {
             final StringBuilder buffer = new StringBuilder(200);
             final OutputStreamWriter writer = new OutputStreamWriter(out, "ISO8859_1"); //$NON-NLS-1$

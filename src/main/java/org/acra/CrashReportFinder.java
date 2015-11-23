@@ -22,6 +22,8 @@ import java.io.FilenameFilter;
 
 import android.content.Context;
 
+import org.acra.util.ReportUtils;
+
 /**
  * Responsible for retrieving the location of Crash Report files.
  * <p/>
@@ -47,7 +49,7 @@ final class CrashReportFinder {
             return new String[0];
         }
 
-        final File dir = context.getFilesDir();
+        final File dir = ReportUtils.getReportsDirectory(context, ACRA.getConfig().reportsDir());
         if (dir == null) {
             ACRA.log.w(LOG_TAG, "Application files directory does not exist! The application may not be installed correctly. Please try reinstalling.");
             return new String[0];

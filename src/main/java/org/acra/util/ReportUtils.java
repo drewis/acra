@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import org.acra.ACRA;
 import org.acra.ACRAConstants;
@@ -79,6 +80,24 @@ public final class ReportUtils {
 
         ACRA.log.w(LOG_TAG, "Couldn't retrieve ApplicationFilePath for : " + context.getPackageName());
         return "Couldn't retrieve ApplicationFilePath";
+    }
+
+    public static File getReportsDirectory(Context context, String reportsDir) {
+        final File filesDir = context.getFilesDir();
+        if (TextUtils.isEmpty(reportsDir)) {
+            return filesDir;
+        } else {
+            final File dir = new File(filesDir, reportsDir);
+            if (dir.exists() && !dir.isDirectory() && !dir.delete()) {
+                ACRA.log.w(LOG_TAG, "ReportsDirectory already exists and is not a directory. path=" + dir.getAbsolutePath());
+                return filesDir;
+            }
+            if (!dir.exists() && !dir.mkdirs()) {
+                ACRA.log.w(LOG_TAG, "Unable to create ReportsDirectory. path=" + dir.getAbsolutePath());
+                return filesDir;
+            }
+            return dir;
+        }
     }
     
     /**
