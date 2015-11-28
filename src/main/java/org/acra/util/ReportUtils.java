@@ -1,6 +1,7 @@
 package org.acra.util;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.telephony.TelephonyManager;
@@ -83,7 +84,12 @@ public final class ReportUtils {
     }
 
     public static File getReportsDirectory(Context context, String reportsDir) {
-        final File filesDir = context.getFilesDir();
+        final File filesDir;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            filesDir = context.getNoBackupFilesDir();
+        } else {
+            filesDir = context.getFilesDir();
+        }
         if (TextUtils.isEmpty(reportsDir)) {
             return filesDir;
         } else {

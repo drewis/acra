@@ -542,7 +542,9 @@ public @interface ReportsCrashes {
 
     /**
      * The directory path to store crash reports. Path is relative to {@link Context#getFilesDir()}
-     * Use to separate crash reports for multi process apps.
+     * or {@link Context#getNoBackupFilesDir()} on android-L (api 21) and higher
+     * <br/>
+     * Can be used to separate crash reports for multi-process apps.
      *
      * @return Relative path to cash reports directory
      */
